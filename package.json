@@ -1,0 +1,42 @@
+{
+  "name": "devtracker",
+  "version": "0.1.0",
+  "description": "A local-first desktop workspace for engineering task tracking and bilingual reports.",
+  "license": "MIT",
+  "repository": "github:Hy-1990/DevTracker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "privacy:check": "bash scripts/check-repository-safety.sh",
+    "privacy:test": "bash scripts/test-repository-safety.sh",
+    "test": "vitest run",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/plugin-dialog": "^2.0.0",
+    "@tauri-apps/plugin-fs": "^2.0.0",
+    "date-fns": "^3.6.0",
+    "echarts": "^5.5.0",
+    "markdown-it": "^14.2.0",
+    "naive-ui": "^2.39.0",
+    "pinia": "^2.2.0",
+    "vue": "^3.5.0",
+    "vue-i18n": "^11.4.6",
+    "vue-router": "^4.4.0",
+    "vuedraggable": "^4.1.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "@types/markdown-it": "^14.1.2",
+    "@vitejs/plugin-vue": "^5.1.0",
+    "typescript": "^5.5.0",
+    "vite": "^5.4.0",
+    "vitest": "^4.1.8",
+    "vue-tsc": "^2.1.0"
+  }
+}

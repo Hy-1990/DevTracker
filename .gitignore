@@ -1,0 +1,45 @@
+# Dependencies and build output
+node_modules/
+dist/
+src-tauri/target/
+target/
+
+# Runtime data: never commit local DevTracker records
+data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+*.bak
+*.bak-*
+*.bak_*
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+credentials*.json
+secrets*.json
+service-account*.json
+
+# Local tooling and temporary files
+.loop-runs/
+.gstack/
+.codex/
+.claude/
+.agents/
+docs/superpowers/
+*.log
+.DS_Store
+Thumbs.db
+vite.config.ts.timestamp-*.mjs
+*.tmp
+*.tmp.*
+*.xmp
+*.swp
