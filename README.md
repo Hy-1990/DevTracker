@@ -1,41 +1,41 @@
 # DevTracker
 
-[English](README_EN.md) | 简体中文
+English | [简体中文](docs/README_zh-CN.md)
 
 [![CI](https://github.com/Hy-1990/DevTracker/actions/workflows/ci.yml/badge.svg)](https://github.com/Hy-1990/DevTracker/actions/workflows/ci.yml)
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883.svg)](https://vuejs.org/)
 [![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db.svg)](https://tauri.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-DevTracker 是一个本地优先的研发任务管理桌面应用，面向需要同时管理月度任务、交付节奏、人员负载与研发汇报的小型团队。它使用 Vue 3、TypeScript、Tauri 2、Rust 和 SQLite 构建，支持中文和英文界面，以及对应语言的日报、周报和月报。
+DevTracker is a local-first desktop workspace for small engineering teams that need one place to manage monthly tasks, delivery health, team capacity, and status reports. It is built with Vue 3, TypeScript, Tauri 2, Rust, and SQLite, with complete Chinese and English interfaces and matching daily, weekly, and monthly reports.
 
-> 当前仓库提供源码构建方式，尚未发布签名安装包。所有截图均使用虚构演示数据。
+> This repository currently provides source builds only. Signed installers are not published yet. Every screenshot uses fictional demo data.
 
-## 界面预览
+## Screenshots
 
-### 分组任务表格
+### Grouped task table
 
-![DevTracker 表格视图](docs/images/devtracker-table.png)
+![DevTracker table view](docs/images/devtracker-table.png)
 
-### 看板
+### Kanban board
 
-![DevTracker 看板视图](docs/images/devtracker-kanban.png)
+![DevTracker Kanban view](docs/images/devtracker-kanban.png)
 
-### 统计分析
+### Analytics
 
-![DevTracker 统计视图](docs/images/devtracker-stats.png)
+![DevTracker analytics view](docs/images/devtracker-stats.png)
 
-## 功能
+## Features
 
-- 月度任务表，支持父子任务、负责人、执行人、测试人员、项目、优先级、状态、日期、工时、进度和质量评分。
-- 表格、看板、延期分析、交付排名、统计分析和人员容量视图。
-- 中文与英文界面即时切换，语言选择保存在本机。
-- 中文或英文日报、周报和月报；AI 提示词严格跟随当前界面语言。
-- 导出 Excel、CSV、JSON 和 SQLite 数据库副本。
-- 深色、浅色和跟随系统主题。
-- 本地 SQLite 数据库，不依赖远程业务服务。
+- Monthly task boards with subtasks, owners, assignees, testers, projects, priorities, statuses, dates, effort, progress, and quality scores.
+- Table, Kanban, delay analysis, delivery rankings, analytics, and team-capacity views.
+- Instant Chinese and English switching with the preference stored locally.
+- Daily, weekly, and monthly reports in the selected language, including locale-specific AI prompts.
+- Excel, CSV, JSON, and SQLite database exports.
+- Dark, light, and system theme modes.
+- A local SQLite database with no remote application backend.
 
-## 技术架构
+## Architecture
 
 ```text
 Vue 3 + TypeScript + Naive UI
@@ -47,18 +47,18 @@ Vue 3 + TypeScript + Naive UI
   OS application data directory
 ```
 
-前端负责交互、统计图表和报告生成；Tauri 命令负责数据库访问、文件导出和可选的 DeepSeek API 请求。数据库默认位于操作系统的应用数据目录，不存放在 Git 仓库中。
+The frontend handles interaction, analytics, and report generation. Tauri commands handle database access, file exports, and optional DeepSeek API requests. The database lives in the operating system's application-data directory, not inside the Git repository.
 
-## 快速开始
+## Quick start
 
-### 环境要求
+### Prerequisites
 
-- Node.js 20 或更高版本
+- Node.js 20 or later
 - npm
 - Rust stable
-- [Tauri 2 系统依赖](https://v2.tauri.app/start/prerequisites/)
+- [Tauri 2 system prerequisites](https://v2.tauri.app/start/prerequisites/)
 
-### 开发
+### Development
 
 ```bash
 git clone https://github.com/Hy-1990/DevTracker.git
@@ -67,7 +67,7 @@ npm ci
 npm run tauri dev
 ```
 
-### 测试与构建
+### Test and build
 
 ```bash
 npm test
@@ -76,57 +76,58 @@ cargo test --manifest-path src-tauri/Cargo.toml
 npm run tauri build
 ```
 
-`npm run tauri build` 会根据当前操作系统生成桌面安装产物。生成目录已被 Git 忽略。
+`npm run tauri build` creates desktop artifacts for the current operating system. Generated output is excluded from Git.
 
-## 数据与隐私
+## Data and privacy
 
-默认数据库位置：
+Default database locations:
 
-- macOS：`~/Library/Application Support/DevTracker/data.db`
-- Windows：用户 Local AppData 中的 `DevTracker/data.db`
-- Linux：用户本地数据目录中的 `DevTracker/data.db`
+- macOS: `~/Library/Application Support/DevTracker/data.db`
+- Windows: `DevTracker/data.db` under the user's Local AppData directory
+- Linux: `DevTracker/data.db` under the user's local data directory
 
-可通过 `DEVTRACKER_DB_DIR` 环境变量指定其他目录。旧版本如果在项目的 `data/data.db` 中存在数据库，首次启动会使用 SQLite 一致性备份迁移到系统数据目录；旧文件不会自动删除。
+Set `DEVTRACKER_DB_DIR` to use another directory. If an older release finds `data/data.db` inside the project, the first launch copies it to the system data directory using SQLite's consistent backup API. The original file is never deleted automatically.
 
-仓库通过 `.gitignore`、CI 和隐私扫描脚本阻止数据库、备份、环境文件、私钥、本机绝对路径和高置信度凭据进入提交：
+The repository uses `.gitignore`, CI, and privacy-check scripts to reject databases, backups, environment files, private keys, local absolute paths, and high-confidence credential literals:
 
 ```bash
 npm run privacy:test
 npm run privacy:check
 ```
 
-### AI 总结的隐私边界
+### AI privacy boundary
 
-DeepSeek API Key 保存在应用 WebView 的本机 `localStorage` 中，不写入项目或数据库。只有主动点击 AI 总结按钮时，当前报告内容和 API Key 才会发送到 DeepSeek API。报告可能包含任务、项目和人员信息，请在使用 AI 功能前确认这些内容允许发送给第三方服务。
+The DeepSeek API Key is stored in the WebView's local `localStorage`; it is not written to the project or SQLite database. Only when you explicitly request an AI summary are the current report content and API Key sent to the DeepSeek API. Reports may contain task, project, or team-member information, so confirm that this data may be shared with a third-party service before using AI features.
 
-不使用 AI 功能时，任务管理和普通报告生成完全在本机完成。
+Without AI features, task management and standard report generation stay entirely on the device.
 
-## 演示数据与截图
+## Demo data and screenshots
 
-`scripts/demo-data.sql` 只包含虚构人员、项目和任务。运行：
+`scripts/demo-data.sql` contains fictional people, projects, and tasks only. Run:
 
 ```bash
 scripts/run-demo.sh
 ```
 
-脚本会在系统临时目录创建隔离数据库，退出后自动清理，不会读取或覆盖默认数据库。
+The script creates an isolated database in the system temporary directory and removes it on exit. It never reads or overwrites the default database.
 
-## 项目结构
+## Project structure
 
 ```text
-src/                    Vue 前端、视图、状态与国际化
-src-tauri/src/          Rust 命令、SQLite 数据层
-scripts/                隐私检查与隔离演示数据
-docs/images/            README 演示截图
-.github/workflows/      CI 验证
+src/                    Vue frontend, views, state, and localization
+src-tauri/src/          Rust commands and SQLite data layer
+scripts/                Privacy checks and isolated demo data
+docs/                   Localized documentation
+docs/images/            README screenshots
+.github/workflows/      CI verification
 ```
 
-## 参与贡献
+## Contributing
 
-欢迎提交 Issue 或 Pull Request。提交前请运行完整测试和隐私检查，所有示例、日志、截图与测试数据必须使用虚构内容。
+Issues and pull requests are welcome. Run the full test and privacy checks before submitting changes. All examples, logs, screenshots, and test fixtures must use fictional data.
 
-安全或隐私问题请阅读 [SECURITY.md](SECURITY.md)，不要在公开 Issue 中粘贴数据库、日志、API Key 或真实业务数据。
+For security or privacy reports, read [SECURITY.md](SECURITY.md). Never post databases, logs, API keys, or real business data in a public issue.
 
-## 许可证
+## License
 
 [MIT License](LICENSE)
