@@ -39,6 +39,9 @@ jobs:
           npm run privacy:test
           npm run privacy:check
 
+      - name: Check macOS release signing configuration
+        run: npm run release:check:macos-config
+
       - name: Test frontend
         run: npm test
 

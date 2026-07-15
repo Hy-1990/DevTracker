@@ -1,6 +1,6 @@
 {
   "name": "devtracker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A local-first desktop workspace for engineering task tracking and bilingual reports.",
   "license": "MIT",
   "repository": "github:Hy-1990/DevTracker",
@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "privacy:check": "bash scripts/check-repository-safety.sh",
     "privacy:test": "bash scripts/test-repository-safety.sh",
+    "release:check:macos-config": "bash scripts/test-macos-release-config.sh",
+    "release:build:macos": "bash scripts/build-macos-release.sh",
     "test": "vitest run",
     "tauri": "tauri"
   },
