@@ -1,6 +1,6 @@
 {
   "name": "devtracker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A local-first desktop workspace for engineering task tracking and bilingual reports.",
   "license": "MIT",
   "repository": "github:Hy-1990/DevTracker",

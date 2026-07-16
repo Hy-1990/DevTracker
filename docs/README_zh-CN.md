@@ -9,7 +9,7 @@
 
 DevTracker 是一个本地优先的研发任务管理桌面应用，面向需要同时管理月度任务、交付节奏、人员负载与研发汇报的小型团队。它使用 Vue 3、TypeScript、Tauri 2、Rust 和 SQLite 构建，支持中文和英文界面，以及对应语言的日报、周报和月报。
 
-> [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases) 提供经过 ad-hoc 签名的 Apple Silicon DMG。由于尚未经过 Apple 公证，macOS 首次启动时需要手动允许。所有截图均使用虚构演示数据。
+> [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases) 提供经过 Developer ID 签名和 Apple 公证的 Universal DMG，同时支持 Apple Silicon 与 Intel Mac。所有截图均使用虚构演示数据。
 
 ## 界面预览
 
@@ -51,13 +51,13 @@ Vue 3 + TypeScript + Naive UI
 
 ## 快速开始
 
-### 在 Apple Silicon Mac 上安装
+### 在 macOS 上安装
 
-1. 从 [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest) 下载 `DevTracker_0.1.1_aarch64.dmg`。
+1. 从 [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest) 下载 `DevTracker_0.1.2_universal.dmg`。
 2. 打开 DMG，将 DevTracker 拖入“应用程序”。
-3. 尝试启动一次。如果 macOS 阻止打开，请进入 **系统设置 → 隐私与安全性**，找到 DevTracker 的安全提示并选择 **仍要打开**。
+3. 从“应用程序”中打开 DevTracker。
 
-DMG 已进行 ad-hoc 签名并通过严格的 App bundle 签名校验，但尚未使用付费 Apple Developer ID 签名，也没有经过 Apple 公证。对于并非从本仓库下载的副本，请勿绕过系统警告。
+Universal DMG 已使用 Apple Developer ID 签名，启用了 Hardened Runtime 和安全时间戳，并通过 Apple 公证。
 
 ### 环境要求
 
@@ -86,7 +86,7 @@ npm run tauri build
 
 `npm run tauri build` 会根据当前操作系统生成桌面安装产物。生成目录已被 Git 忽略。
 
-在 macOS 上，可使用 `npm run release:build:macos` 生成可分发的 ad-hoc 签名 DMG。该命令还会检查磁盘镜像、完整 App bundle 签名、处理器架构和敏感文件类型。
+在 macOS 上，可使用 `npm run release:build:macos` 生成经过签名和公证的 Universal DMG。该命令会检查磁盘镜像、Developer ID 签名、Hardened Runtime、安全时间戳、两种处理器架构、公证票据、Gatekeeper 评估和敏感文件类型。
 
 ## 数据与隐私
 
