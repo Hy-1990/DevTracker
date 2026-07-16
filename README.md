@@ -9,7 +9,7 @@ English | [简体中文](docs/README_zh-CN.md)
 
 DevTracker is a local-first desktop workspace for small engineering teams that need one place to manage monthly tasks, delivery health, team capacity, and status reports. It is built with Vue 3, TypeScript, Tauri 2, Rust, and SQLite, with complete Chinese and English interfaces and matching daily, weekly, and monthly reports.
 
-> An ad-hoc signed Apple Silicon DMG is available from [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases). It is not Apple-notarized, so macOS requires one manual approval on first launch. Every screenshot uses fictional demo data.
+> A Developer ID-signed and Apple-notarized Universal DMG is available from [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases). It supports both Apple Silicon and Intel Macs. Every screenshot uses fictional demo data.
 
 ## Screenshots
 
@@ -51,13 +51,13 @@ The frontend handles interaction, analytics, and report generation. Tauri comman
 
 ## Quick start
 
-### Install on Apple Silicon Macs
+### Install on macOS
 
-1. Download `DevTracker_0.1.1_aarch64.dmg` from [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest).
+1. Download `DevTracker_0.1.2_universal.dmg` from [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest).
 2. Open the DMG and drag DevTracker into Applications.
-3. Try to open DevTracker once. If macOS blocks it, open **System Settings → Privacy & Security**, locate the DevTracker security message, and choose **Open Anyway**.
+3. Open DevTracker from Applications.
 
-The DMG is ad-hoc signed and passes strict bundle-signature verification, but it is not signed with a paid Apple Developer ID or notarized by Apple. Do not bypass this warning for copies obtained outside this repository.
+The Universal DMG is signed with Apple Developer ID, uses the hardened runtime and a secure timestamp, and is notarized by Apple.
 
 ### Prerequisites
 
@@ -86,7 +86,7 @@ npm run tauri build
 
 `npm run tauri build` creates desktop artifacts for the current operating system. Generated output is excluded from Git.
 
-On macOS, use `npm run release:build:macos` for a distributable ad-hoc signed DMG. The command also verifies the disk image, the complete App bundle signature, architecture, and absence of sensitive file types.
+On macOS, use `npm run release:build:macos` for a signed and notarized Universal DMG. The command verifies the disk image, Developer ID signature, hardened runtime, secure timestamp, both processor architectures, notarization ticket, Gatekeeper assessment, and absence of sensitive file types.
 
 ## Data and privacy
 
