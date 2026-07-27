@@ -53,7 +53,7 @@ Vue 3 + TypeScript + Naive UI
 
 ### 在 macOS 上安装
 
-1. 从 [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest) 下载 `DevTracker_0.1.2_universal.dmg`。
+1. 从 [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest) 下载 `DevTracker_0.1.3_universal.dmg`。
 2. 打开 DMG，将 DevTracker 拖入“应用程序”。
 3. 从“应用程序”中打开 DevTracker。
 
