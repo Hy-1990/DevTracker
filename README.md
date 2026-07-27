@@ -53,7 +53,7 @@ The frontend handles interaction, analytics, and report generation. Tauri comman
 
 ### Install on macOS
 
-1. Download `DevTracker_0.1.2_universal.dmg` from [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest).
+1. Download `DevTracker_0.1.3_universal.dmg` from [GitHub Releases](https://github.com/Hy-1990/DevTracker/releases/latest).
 2. Open the DMG and drag DevTracker into Applications.
 3. Open DevTracker from Applications.
 

@@ -85,15 +85,22 @@ pub struct UpdateTaskInput {
     pub status: Option<String>,
     pub priority: Option<String>,
     pub task_type: Option<String>,
-    pub project_id: Option<i64>,
-    pub owner_id: Option<i64>,
+    #[serde(default, deserialize_with = "deserialize_option_option")]
+    pub project_id: Option<Option<i64>>,
+    #[serde(default, deserialize_with = "deserialize_option_option")]
+    pub owner_id: Option<Option<i64>>,
     pub assignee_ids: Option<Vec<i64>>,
     pub tester_ids: Option<Vec<i64>>,
-    pub start_date: Option<String>,
-    pub estimated_test_date: Option<String>,
-    pub actual_test_date: Option<String>,
-    pub estimated_release_date: Option<String>,
-    pub completion_date: Option<String>,
+    #[serde(default, deserialize_with = "deserialize_option_option")]
+    pub start_date: Option<Option<String>>,
+    #[serde(default, deserialize_with = "deserialize_option_option")]
+    pub estimated_test_date: Option<Option<String>>,
+    #[serde(default, deserialize_with = "deserialize_option_option")]
+    pub actual_test_date: Option<Option<String>>,
+    #[serde(default, deserialize_with = "deserialize_option_option")]
+    pub estimated_release_date: Option<Option<String>>,
+    #[serde(default, deserialize_with = "deserialize_option_option")]
+    pub completion_date: Option<Option<String>>,
     pub progress: Option<i32>,
     pub progress_auto: Option<bool>,
     pub story_points: Option<f64>,

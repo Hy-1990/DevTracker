@@ -333,7 +333,14 @@ pub fn create_task(input: CreateTaskInput) -> Result<TaskWithRelations, String> 
 #[tauri::command]
 pub fn update_task(id: i64, input: UpdateTaskInput) -> Result<TaskWithRelations, String> {
     let conn = open_db().map_err(|e| e.to_string())?;
+    update_task_in_connection(&conn, id, input)
+}
 
+fn update_task_in_connection(
+    conn: &rusqlite::Connection,
+    id: i64,
+    input: UpdateTaskInput,
+) -> Result<TaskWithRelations, String> {
     let mut sets = vec!["updated_at = datetime('now')".to_string()];
     let mut param_values: Vec<Box<dyn rusqlite::types::ToSql>> = vec![];
     let mut idx = 1;
@@ -348,26 +355,31 @@ pub fn update_task(id: i64, input: UpdateTaskInput) -> Result<TaskWithRelations,
         };
     }
 
+    macro_rules! maybe_set_nullable {
+        ($field:ident, $col:expr) => {
+            if let Some(ref val) = input.$field {
+                sets.push(format!("{} = ?{}", $col, idx));
+                param_values.push(Box::new(val.clone()));
+                idx += 1;
+            }
+        };
+    }
+
     maybe_set!(name, "name");
     maybe_set!(description, "description");
     maybe_set!(status, "status");
     maybe_set!(priority, "priority");
     maybe_set!(task_type, "type");
-    maybe_set!(project_id, "project_id");
-    maybe_set!(owner_id, "owner_id");
-    maybe_set!(start_date, "start_date");
-    maybe_set!(estimated_test_date, "estimated_test_date");
-    maybe_set!(actual_test_date, "actual_test_date");
-    maybe_set!(estimated_release_date, "estimated_release_date");
-    maybe_set!(completion_date, "completion_date");
+    maybe_set_nullable!(project_id, "project_id");
+    maybe_set_nullable!(owner_id, "owner_id");
+    maybe_set_nullable!(start_date, "start_date");
+    maybe_set_nullable!(estimated_test_date, "estimated_test_date");
+    maybe_set_nullable!(actual_test_date, "actual_test_date");
+    maybe_set_nullable!(estimated_release_date, "estimated_release_date");
+    maybe_set_nullable!(completion_date, "completion_date");
     maybe_set!(progress, "progress");
     maybe_set!(story_points, "story_points");
-    // quality_rating: Option<Option<i32>> — Some(None) means set to NULL, Some(Some(v)) means set value
-    if let Some(ref opt_val) = input.quality_rating {
-        sets.push(format!("quality_rating = ?{}", idx));
-        param_values.push(Box::new(opt_val.clone()));
-        idx += 1;
-    }
+    maybe_set_nullable!(quality_rating, "quality_rating");
     maybe_set!(latest_note, "latest_note");
 
     if let Some(auto) = input.progress_auto {
@@ -407,12 +419,12 @@ pub fn update_task(id: i64, input: UpdateTaskInput) -> Result<TaskWithRelations,
     }
 
     let sql = format!("{} WHERE id = ?1", TASK_SELECT);
-    let tasks = query_tasks(&conn, &sql, &[&id])?;
+    let tasks = query_tasks(conn, &sql, &[&id])?;
     let task = tasks
         .into_iter()
         .next()
         .ok_or("Task not found".to_string())?;
-    build_task_with_relations(&conn, task, true)
+    build_task_with_relations(conn, task, true)
 }
 
 #[tauri::command]
@@ -460,4 +472,58 @@ pub fn batch_update_tasks(ids: Vec<i64>, input: BatchUpdateInput) -> Result<(), 
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::db::init_db;
+    use serde_json::json;
+
+    #[test]
+    fn explicit_null_clears_nullable_task_fields() {
+        let conn = rusqlite::Connection::open_in_memory().unwrap();
+        init_db(&conn).unwrap();
+        conn.execute(
+            "INSERT INTO boards(name, year_month) VALUES ('Test', '2099-01')",
+            [],
+        )
+        .unwrap();
+        conn.execute("INSERT INTO projects(name) VALUES ('Project')", [])
+            .unwrap();
+        conn.execute(
+            "INSERT INTO members(name, role) VALUES ('Owner', 'dev')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO tasks(
+                board_id, name, project_id, owner_id, start_date, estimated_test_date,
+                actual_test_date, estimated_release_date, completion_date
+             ) VALUES (1, 'Task', 1, 1, '2099-01-01', '2099-01-02', '2099-01-03',
+                       '2099-01-04', '2099-01-05')",
+            [],
+        )
+        .unwrap();
+
+        let input: UpdateTaskInput = serde_json::from_value(json!({
+            "project_id": null,
+            "owner_id": null,
+            "start_date": null,
+            "estimated_test_date": null,
+            "actual_test_date": null,
+            "estimated_release_date": null,
+            "completion_date": null
+        }))
+        .unwrap();
+        let updated = update_task_in_connection(&conn, 1, input).unwrap();
+
+        assert_eq!(updated.task.project_id, None);
+        assert_eq!(updated.task.owner_id, None);
+        assert_eq!(updated.task.start_date, None);
+        assert_eq!(updated.task.estimated_test_date, None);
+        assert_eq!(updated.task.actual_test_date, None);
+        assert_eq!(updated.task.estimated_release_date, None);
+        assert_eq!(updated.task.completion_date, None);
+    }
 }
