@@ -181,7 +181,11 @@ pub fn clone_board(source_id: i64, name: String, year_month: String) -> Result<B
         .prepare(&format!(
             "SELECT {}
              FROM tasks
-             WHERE board_id = ?1 AND parent_id IS NULL AND status != '已完成'",
+             WHERE board_id = ?1 AND parent_id IS NULL
+               AND (status != '已完成' OR EXISTS (
+                   SELECT 1 FROM tasks c
+                   WHERE c.parent_id = tasks.id AND c.status != '已完成'
+               ))",
             CLONE_TASK_SELECT
         ))
         .map_err(|e| e.to_string())?;
@@ -215,28 +219,6 @@ pub fn clone_board(source_id: i64, name: String, year_month: String) -> Result<B
             let new_child_id = insert_cloned_task(&conn, new_board_id, Some(new_task_id), child)?;
             copy_task_people(&conn, child.old_id, new_child_id)?;
         }
-    }
-
-    let mut orphan_child_stmt = conn
-        .prepare(&format!(
-            "SELECT c.id, c.name, c.description, c.status, c.priority, c.type, c.project_id, c.owner_id,
-                    c.start_date, c.estimated_test_date, c.actual_test_date, c.estimated_release_date,
-                    c.completion_date, c.progress, c.progress_auto, c.story_points, c.quality_rating,
-                    c.latest_note
-             FROM tasks c
-             JOIN tasks p ON p.id = c.parent_id
-             WHERE p.board_id = ?1 AND p.status = '已完成' AND c.status != '已完成'"
-        ))
-        .map_err(|e| e.to_string())?;
-    let orphan_children: Vec<CloneTaskDraft> = orphan_child_stmt
-        .query_map([source_id], row_to_clone_task)
-        .map_err(|e| e.to_string())?
-        .collect::<Result<Vec<_>, _>>()
-        .map_err(|e| e.to_string())?;
-
-    for child in &orphan_children {
-        let new_child_id = insert_cloned_task(&conn, new_board_id, None, child)?;
-        copy_task_people(&conn, child.old_id, new_child_id)?;
     }
 
     let board = conn
@@ -381,7 +363,7 @@ mod tests {
     }
 
     #[test]
-    fn clone_board_carries_unfinished_children_of_completed_parents_forward() {
+    fn clone_board_preserves_parent_for_unfinished_children_of_completed_parents() {
         let _guard = TEST_ENV_LOCK.lock().unwrap();
         let dir = setup_test_db();
         let source = create_board("2026年6月".to_string(), "2026-06".to_string()).unwrap();
@@ -403,24 +385,27 @@ mod tests {
 
         let cloned =
             clone_board(source.id, "2026年7月".to_string(), "2026-07".to_string()).unwrap();
-        let copied_tasks: Vec<(String, String, Option<i64>)> = {
+        let copied_tasks: Vec<(i64, String, String, Option<i64>)> = {
             let mut stmt = conn
                 .prepare(
-                    "SELECT name, status, parent_id FROM tasks WHERE board_id = ?1 ORDER BY id",
+                    "SELECT id, name, status, parent_id FROM tasks WHERE board_id = ?1 ORDER BY id",
                 )
                 .unwrap();
             stmt.query_map([cloned.id], |row| {
-                Ok((row.get(0)?, row.get(1)?, row.get(2)?))
+                Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
             })
             .unwrap()
             .collect::<Result<Vec<_>, _>>()
             .unwrap()
         };
 
-        assert_eq!(
-            copied_tasks,
-            vec![("遗留子任务".to_string(), "进行中".to_string(), None)]
-        );
+        assert_eq!(copied_tasks.len(), 2);
+        assert_eq!(copied_tasks[0].1, "已完成父任务");
+        assert_eq!(copied_tasks[0].2, "已完成");
+        assert_eq!(copied_tasks[0].3, None);
+        assert_eq!(copied_tasks[1].1, "遗留子任务");
+        assert_eq!(copied_tasks[1].2, "进行中");
+        assert_eq!(copied_tasks[1].3, Some(copied_tasks[0].0));
 
         std::env::remove_var("DEVTRACKER_DB_DIR");
         std::fs::remove_dir_all(dir).unwrap();

@@ -14,7 +14,7 @@ export const zhCN = {
   board: {
     new: '新建月度表', newTitle: '新建月度任务表', yearMonth: '年月', name: '名称',
     deleteTitle: '删除月度任务表', deleteMessage: '确定要删除这个月度表吗？该表下所有任务（含子任务）将被永久删除，此操作不可恢复。',
-    clone: '复制为新月度表', cloneTitle: '复制月度表', cloneHint: '将完整继承未完成任务（状态、日期、进度、执行人、测试人员、项目等），已完成任务不复制。',
+    clone: '复制为新月度表', cloneTitle: '复制月度表', cloneHint: '将完整继承未完成任务及其父子关系（状态、日期、进度、执行人、测试人员、项目等）；如未完成子任务仍需延续，其已完成父任务也会一并复制以保留层级。',
     newYearMonth: '新表年月', newName: '新表名称', defaultName: '{year}年{month}月',
   },
   settings: {

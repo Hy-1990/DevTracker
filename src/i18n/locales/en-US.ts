@@ -14,7 +14,7 @@ export const enUS = {
   board: {
     new: 'New monthly board', newTitle: 'Create monthly task board', yearMonth: 'Month', name: 'Name',
     deleteTitle: 'Delete monthly task board', deleteMessage: 'Delete this monthly board? Every task and subtask on it will be permanently deleted. This action cannot be undone.',
-    clone: 'Clone as new month', cloneTitle: 'Clone monthly board', cloneHint: 'Copies every unfinished task with its status, dates, progress, assignees, testers, and project. Completed tasks are not copied.',
+    clone: 'Clone as new month', cloneTitle: 'Clone monthly board', cloneHint: 'Copies unfinished tasks with their status, dates, progress, assignees, testers, project, and parent-child relationships. A completed parent is also copied when needed to preserve an unfinished subtask.',
     newYearMonth: 'New month', newName: 'New board name', defaultName: '{month}/{year}',
   },
   settings: {
