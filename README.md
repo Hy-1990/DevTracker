@@ -37,6 +37,10 @@ DevTracker is a local-first desktop workspace for small engineering teams that n
 
 ## Architecture
 
+### Local bot API
+
+While DevTracker is running, local bots can use the authenticated HTTP API at `127.0.0.1:17863` to query and modify all six business tables. The API stops when the application exits. See the [protocol and examples](docs/LOCAL_API.md) and [OpenAPI specification](docs/local-api.openapi.json).
+
 ```text
 Vue 3 + TypeScript + Naive UI
             │

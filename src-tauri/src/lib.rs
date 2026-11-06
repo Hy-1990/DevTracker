@@ -1,5 +1,6 @@
 mod commands;
 mod db;
+mod local_api;
 mod models;
 
 use commands::{ai, board, export, member, project, task};
@@ -9,6 +10,7 @@ pub fn run() {
     let conn = db::open_db().expect("Failed to open database");
     db::init_db(&conn).expect("Failed to initialize database");
     drop(conn);
+    local_api::start().expect("Failed to start local API on 127.0.0.1:17863");
 
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())

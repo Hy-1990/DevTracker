@@ -1,0 +1,1706 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "DevTracker Local API",
+    "version": "1.0.0",
+    "description": "Desktop process only. See LOCAL_API.md for constraints and cascading deletes."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:17863"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/boards": {
+      "get": {
+        "operationId": "list_boards",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "year_month",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "post": {
+        "operationId": "create_boards",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "year_month": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "201": {
+            "description": "Created record in data"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/boards/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get_boards",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update_boards",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "year_month": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete_boards",
+        "description": "Deletes record; database foreign-key cascades apply.",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/projects": {
+      "get": {
+        "operationId": "list_projects",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "post": {
+        "operationId": "create_projects",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "201": {
+            "description": "Created record in data"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get_projects",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update_projects",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete_projects",
+        "description": "Deletes record; database foreign-key cascades apply.",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/members": {
+      "get": {
+        "operationId": "list_members",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "post": {
+        "operationId": "create_members",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "role": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "201": {
+            "description": "Created record in data"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/members/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get_members",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update_members",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "role": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete_members",
+        "description": "Deletes record; database foreign-key cascades apply.",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks": {
+      "get": {
+        "operationId": "list_tasks",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "board_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "parent_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "project_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "estimated_test_date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "actual_test_date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "estimated_release_date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "completion_date",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "progress",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "progress_auto",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "story_points",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "quality_rating",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "latest_note",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "updated_at",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "post": {
+        "operationId": "create_tasks",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "board_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "parent_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "status": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "priority": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "project_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "owner_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "estimated_test_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "actual_test_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "estimated_release_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "completion_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "progress": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "progress_auto": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "story_points": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "quality_rating": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "latest_note": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "201": {
+            "description": "Created record in data"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get_tasks",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update_tasks",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "board_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "parent_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "status": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "priority": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "project_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "owner_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "estimated_test_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "actual_test_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "estimated_release_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "completion_date": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "progress": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "progress_auto": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "story_points": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "quality_rating": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "latest_note": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete_tasks",
+        "description": "Deletes record; database foreign-key cascades apply.",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/task_assignees": {
+      "get": {
+        "operationId": "list_task_assignees",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "task_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "member_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "post": {
+        "operationId": "create_task_assignees",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "task_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "member_id": {
+                    "type": "integer",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "201": {
+            "description": "Created record in data"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/task_assignees/{task_id}/{member_id}": {
+      "parameters": [
+        {
+          "name": "task_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "member_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get_task_assignees",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update_task_assignees",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "task_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "member_id": {
+                    "type": "integer",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete_task_assignees",
+        "description": "Deletes record; database foreign-key cascades apply.",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/task_testers": {
+      "get": {
+        "operationId": "list_task_testers",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "task_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          },
+          {
+            "name": "member_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Equality filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "post": {
+        "operationId": "create_task_testers",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "task_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "member_id": {
+                    "type": "integer",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "201": {
+            "description": "Created record in data"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/task_testers/{task_id}/{member_id}": {
+      "parameters": [
+        {
+          "name": "task_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "member_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get_task_testers",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update_task_testers",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "task_id": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "member_id": {
+                    "type": "integer",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete_task_testers",
+        "description": "Deletes record; database foreign-key cascades apply.",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    },
+    "/api/v1/schema": {
+      "get": {
+        "operationId": "schema",
+        "responses": {
+          "200": {
+            "description": "Success JSON response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Constraint conflict"
+          },
+          "503": {
+            "description": "Database busy; retry"
+          }
+        }
+      }
+    }
+  }
+}
